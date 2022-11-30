@@ -1,0 +1,20 @@
+
+Documentation is available at http://nginx.org
+
+nginx.c:195行断点就进来了.  首先在terminal里面su root一下,再运行debug可以避免权限问题. 最好解决方式还是用root账号运行.省的麻烦.
+
+参考资料:
+https://blog.csdn.net/alpha_love/article/details/116674139
+
+这个要先把系列博客都泛读一下.知道结构才方便以后代码细节把握.
+
+
+
+
+读博客:
+https://blog.csdn.net/liwenbo_csu/category_6668870.html
+
+
+
+
+
