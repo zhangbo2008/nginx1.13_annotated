@@ -276,20 +276,20 @@ ngx_palloc_large(ngx_pool_t *pool, size_t size)
     n = 0;
 
 
-    //lareg里面找. 找到后把信息放到pool->large里面.
+    //放到large链表的最后.
     for (large = pool->large; large; large = large->next) {
         if (large->alloc == NULL) {
             large->alloc = p; //找到位置,放入新创建的p指针.
             return p;
         }
-        if (n++ > 3) {//查询3个节点.
+        if (n++ > 3) {//查询3个节点.alloc里面都已经被占用了.放就break掉.因为需要新创建了.
             break;
         }
     }
 
 
     //large里面找不到就重新创建一个指针.
-    //然后把p信息放入pool里面.
+    // small分配出来一个位置.用来放large的结构体.然后把p放到large的alloc字段里面.
     large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
     if (large == NULL) {
         ngx_free(p);
@@ -316,17 +316,17 @@ ngx_palloc_large(ngx_pool_t *pool, size_t size)
 
 
 
-void *
+void *  //分配一个对齐的指针,这个地址放在pool里面.
 ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
 {
     void              *p;
     ngx_pool_large_t  *large;
 
-    p = ngx_memalign(alignment, size, pool->log);
+    p = ngx_memalign(alignment, size, pool->log);//获得对齐的指针p
     if (p == NULL) {
         return NULL;
     }
-
+//构建一个large结构体,然后把p给他.
     large = ngx_palloc_small(pool, sizeof(ngx_pool_large_t), 1);
     if (large == NULL) {
         ngx_free(p);
@@ -334,7 +334,7 @@ ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment)
     }
 
     large->alloc = p;
-    large->next = pool->large;
+    large->next = pool->large;//头插入链表.
     pool->large = large;
 
     return p;
@@ -380,7 +380,7 @@ ngx_pcalloc(ngx_pool_t *pool, size_t size)
     return p;
 }
 
-
+//cleanup里面添加一个大小为size的.
 ngx_pool_cleanup_t *
 ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
 {
@@ -400,7 +400,7 @@ ngx_pool_cleanup_add(ngx_pool_t *p, size_t size)
     } else {
         c->data = NULL;
     }
-
+//把c头插入链表中.
     c->handler = NULL;
     c->next = p->cleanup;
 
@@ -441,7 +441,7 @@ ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd)
 }
 
 
-void
+void//关闭文件.
 ngx_pool_cleanup_file(void *data)
 {
     ngx_pool_cleanup_file_t  *c = data;
@@ -455,7 +455,7 @@ ngx_pool_cleanup_file(void *data)
     }
 }
 
-
+//删除文件.
 void
 ngx_pool_delete_file(void *data)
 {

@@ -16,6 +16,12 @@ static ngx_int_t ngx_conf_read_token(ngx_conf_t *cf);
 static void ngx_conf_flush_files(ngx_cycle_t *cycle);
 
 
+// 用static修饰的函数，本限定在本源码文件中，不能被本源码文件以外的代码文件调用。而普通的函数，默认是extern的，也就是说，可以被其它代码文件调用该函数。 所以静态函数就是为了这个脚本其他函数用的. 他的作用于就是这个脚本!!!!!!!!!!
+
+
+
+
+
 static ngx_command_t  ngx_conf_commands[] = {
 
     { ngx_string("include"),

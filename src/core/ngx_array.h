@@ -14,10 +14,10 @@
 
 
 typedef struct {
-    void        *elts;
-    ngx_uint_t   nelts;
-    size_t       size;
-    ngx_uint_t   nalloc;
+    void        *elts; //首元素的地址.
+    ngx_uint_t   nelts;  //数组使用元素的数量.
+    size_t       size;   //每个元素的字节数.
+    ngx_uint_t   nalloc;    // 数组容量.
     ngx_pool_t  *pool;
 } ngx_array_t;
 

@@ -10,6 +10,7 @@
         "typeinfo": "c",
         "string.h": "c",
         "limits": "c",
-        "ngx_core.h": "c"
+        "ngx_core.h": "c",
+        "ngx_config.h": "c"
     }
 }

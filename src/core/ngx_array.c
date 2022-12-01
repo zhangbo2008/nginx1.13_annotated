@@ -33,7 +33,7 @@ ngx_array_destroy(ngx_array_t *a)
     ngx_pool_t  *p;
 
     p = a->pool;
-
+//elts 指向数组第一个元素的首地址. 如果数组结尾就是pool的光标位置.那么pool光标移动就是删除了. 回收给内存池.
     if ((u_char *) a->elts + a->size * a->nalloc == p->d.last) {
         p->d.last -= a->size * a->nalloc;
     }
@@ -51,7 +51,7 @@ ngx_array_push(ngx_array_t *a)
     size_t       size;
     ngx_pool_t  *p;
 
-    if (a->nelts == a->nalloc) {
+    if (a->nelts == a->nalloc) { //数组里面数据量等于容量.
 
         /* the array is full */
 
